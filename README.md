@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://karaozgur.com/">Ozgur Kara</a><sup>1,†</sup>,
-  <a href="https://issaccyj.github.io/">Yujia Chen</a><sup>2</sup>,
+  <a href="https://scholar.google.com/citations?user=Dv5gB7cAAAAJ&hl=en">Yujia Chen</a><sup>2</sup>,
   <a href="https://scholar.google.com/citations?user=ve9A9rMAAAAJ&hl=en">Daniel Watson</a><sup>2</sup>,
   <a href="https://scholar.google.com/citations?user=5H0arvkAAAAJ&hl=en">David Forsyth</a><sup>1</sup>,
   <a href="https://scholar.google.com/citations?user=8kA3eDwAAAAJ&hl=en">James Matthew Rehg</a><sup>1</sup>,
