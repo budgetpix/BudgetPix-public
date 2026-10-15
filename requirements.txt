@@ -1,0 +1,21 @@
+# Core (inference + training). Tested with Python 3.10 / torch 2.5 (CUDA) and torch 2.11 (CPU).
+torch>=2.4
+torchvision
+einops
+numpy
+pillow
+pyyaml
+safetensors
+transformers>=4.44        # flan-t5-large (MiniT2I) and gemma-2-2b-it (PixelDiT) text encoders
+sentencepiece
+accelerate            # transformers loads the Gemma-2 encoder through it (PixelDiT)
+huggingface_hub       # the MiniT2I data builders
+# ImageNet training (JiT and pMF lines): the HF imagenet-1k parquet shards
+pyarrow
+# pMF fine-tuning only: the perceptual terms of pMF's loss (LPIPS-VGG; ConvNeXt-V2 comes from transformers)
+lpips
+# Evaluation only (FID / IS). The LTH14 fork is required: it accepts fid_statistics_file=..., which
+# jit/eval.py relies on; plain PyPI torch-fidelity does not.
+torch-fidelity @ git+https://github.com/LTH14/torch-fidelity.git@bfe72b9
+# Optional, CUDA only: flash-attn (varlen kernels). Without it an exact SDPA fallback runs, slower.
+#   pip install flash-attn --no-build-isolation

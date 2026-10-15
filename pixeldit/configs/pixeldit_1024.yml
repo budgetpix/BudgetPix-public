@@ -1,0 +1,62 @@
+# ============================================================================================
+# BudgetPix on PixelDiT-T2I 1024 px
+# ============================================================================================
+#
+#   PIXELDIT_ROOT=/path/to/PixelDiT torchrun --nproc_per_node=4 train_apt.py \
+#       --config configs/pixeldit_1024.yml --resume auto
+
+# ---- geometry -------------------------------------------------------------------------------
+image_size: 1024
+patch_size: 16                 # the released patch size; it is also the FINEST adaptive scale
+scales: [16, 32, 64]           # dense 64x64 = 4096 tokens; coarsest grid 16x16 = 256
+thresholds: [6.0, 4.0]         # bits of entropy to merge 16->32 and 32->64
+
+# ---- the released model ---------------------------------------------------------------------
+checkpoint: /path/to/pixeldit_t2i_v1.pth       # released weights: HF nvidia/PixelDiT-1300M-1024px
+config_json: config.json                       # ships in this folder; architecture only
+
+# ---- released law ---------------------------------------------------------------------------
+flow_shift: 4.0                # linear_flow sigmas, shifted
+diffusion_steps: 1000
+caption_drop: 0.1              # dropout onto the null embedding
+null_emb: eval/null_emb.pt     # the training null = empty string (encode_prompts.py --null_only)
+llm: Efficient-Large-Model/gemma-2-2b-it   # frozen text encoder (HF id or a local snapshot dir)
+lr: 2.0e-5                     # constant
+warmup: 2000
+grad_clip: 0.1
+weight_decay: 0.0
+betas: [0.9, 0.999]
+adam_eps: 1.0e-15
+
+# ---- the BudgetPix recipe ---------------------------------------------------------------------
+use_refine: true               # the token-local refine head on every merged token
+refine_width: 64
+refine_depth: 2
+refine_heads: 4
+mix_bott: 256                  # the zero-init scale mixer's bottleneck
+new_lr_mult: 8.0               # lr multiplier for the zero-init modules
+ema: 0.9999
+ema_device: cpu
+layout:
+  offset_lo: 0.0               # U(0, 2)
+  offset_hi: 2.0
+  anchor_p: 0.15               # dense-grid images
+  scramble_p: 0.10             # content-independent layouts
+
+# ---- schedule and memory ----------------------------------------------------------------------
+grad_ckpt: true                # required at 1024 px
+batch_size: 32                 # global = micro x GPUs x grad_accum
+grad_accum: 2
+max_steps: 30000               # 960k samples
+snapshot_every: 3000           # a kept snapshot every 10 % of the run
+save_every: 1000               # resume point (checkpoint-last.pt)
+log_every: 20
+seed: 0
+output_dir: runs/pixeldit_1024
+
+data:
+  chunks: [/path/to/chunks_1024]     # precompute_data.py output (uint8 pixels + encoded Gemma captions)
+  # tars: [/path/to/webdataset]      # or webdataset shards, encoding captions on the fly
+  micro_batch_size: 4                # per process
+  num_workers: 8
+  dataloader_prefetch: 2

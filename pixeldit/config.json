@@ -1,0 +1,36 @@
+{
+  "architectures": ["PixDiT_T2I"],
+  "model_type": "pixeldit",
+  "in_channels": 3,
+  "patch_size": 16,
+  "num_groups": 24,
+  "hidden_size": 1536,
+  "pixel_hidden_size": 16,
+  "pixel_attn_hidden_size": 1152,
+  "pixel_num_groups": 16,
+  "patch_depth": 14,
+  "pixel_depth": 2,
+  "num_text_blocks": 4,
+  "txt_embed_dim": 2304,
+  "txt_max_length": 300,
+  "use_text_rope": true,
+  "text_rope_theta": 10000.0,
+  "repa_encoder_index": 6,
+  "use_pixel_abs_pos": true,
+  "image_size": 1024,
+  "text_encoder": "gemma-2-2b-it",
+  "num_parameters": 1300000000,
+  "scheduler": {
+    "type": "flow_matching",
+    "flow_shift": 4.0,
+    "weighting_scheme": "logit_normal",
+    "logit_mean": 0.0,
+    "logit_std": 1.0
+  },
+  "sampling": {
+    "algorithm": "flow_dpm-solver",
+    "default_steps": 50,
+    "default_cfg_scale": 2.75,
+    "default_negative_prompt": "low quality, worst quality, over-saturated, blurry, deformed, watermark"
+  }
+}
